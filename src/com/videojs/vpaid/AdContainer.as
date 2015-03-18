@@ -180,6 +180,13 @@ package com.videojs.vpaid {
 					vpaidSWFURL = creative.Linear.MediaFiles[0].MediaFile.toString();
 				}*/
 			}
+
+
+            if (vpaidXML.Ad.InLine.Creatives.Creative.Linear.AdParameters != "") {
+               console("set adparameters");
+               _model.adParameters = vpaidXML.Ad.InLine.Creatives.Creative.Linear.AdParameters
+
+            }
 		
 			if (vpaidSWFURL != "") {
 				/*console("ad swf found::" + vpaidSWFURL);*/
@@ -196,7 +203,15 @@ package com.videojs.vpaid {
             _loadStarted = true;
             var loader:Loader = new Loader();
             var loaderContext:LoaderContext = new LoaderContext();
+            loader.contentLoaderInfo.addEventListener(Event.INIT, function(evt) {
+                    console("****** Ad init: " + evt);
+                    //successfulCreativeLoad(evt);
+                });
+            loader.contentLoaderInfo.addEventListener(ErrorEvent.ERROR, function (evt) {
+                    console("******** Error: " + evt);
+                });
             loader.contentLoaderInfo.addEventListener(Event.COMPLETE, function(evt:Object): void {
+                console("****** Ad Complete: " + evt);
                 successfulCreativeLoad(evt);
             });
             loader.contentLoaderInfo.addEventListener(SecurityErrorEvent.SECURITY_ERROR, 
@@ -246,8 +261,8 @@ package com.videojs.vpaid {
                 onAdStopped();
             });
             
-            _vpaidAd.addEventListener(VPAIDEvent.AdError, function():void {
-				console("OnAdError");
+            _vpaidAd.addEventListener(VPAIDEvent.AdError, function(evt):void {
+				console("OnVPAIDAdError: " + evt.data.message);
                 onAdError();
             });
 
@@ -261,7 +276,7 @@ package com.videojs.vpaid {
 
 			console("initAd");
             // Use stage rect because current ad implementations do not currently provide width/height.
-            _vpaidAd.initAd(_model.stageRect.width, _model.stageRect.height, "normal", _model.bitrate, _model.adParameters);
+            _vpaidAd.initAd(_model.stageRect.width, _model.stageRect.height, "normal", _model.bitrate, _model.adParameters, _model.environmentVars);
         }
     }
 }
