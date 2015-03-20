@@ -35,7 +35,7 @@ package com.videojs.vpaid {
 		
         private function muteHandler(evt:TimerEvent):void {
             SoundMixer.soundTransform = new SoundTransform(0);
-            console('muteHandler')
+            // console('muteHandler')
         }
 
 		public function console(mixedVar:*):void {
