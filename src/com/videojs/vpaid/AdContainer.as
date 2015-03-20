@@ -113,18 +113,19 @@ package com.videojs.vpaid {
         
         private function onAdLoaded(): void {
             addChild(_vpaidAd);
+            _model.broadcastEventExternally(VPAIDEvent.AdLoaded);
             _vpaidAd.startAd();
         }
 
         private function onAdStarted(): void {
-            _model.broadcastEventExternally(ExternalEventName.ON_START)
-            _model.broadcastEventExternally(ExternalEventName.ON_VPAID_ADSTARTED);
+            //_model.broadcastEventExternally(ExternalEventName.ON_START)
+            _model.broadcastEventExternally(VPAIDEvent.AdStarted);
             _isPlaying = true;
             _isPaused = false;
         }
         
         private function onAdError(): void {
-            _model.broadcastErrorEventExternally(ExternalErrorEventName.AD_CREATIVE_VPAID_ERROR);
+            _model.broadcastErrorEventExternally(VPAIDEvent.AdError);
             _vpaidAd.stopAd();
         }
         
@@ -133,7 +134,7 @@ package com.videojs.vpaid {
                 _isPlaying = false;
                 _hasEnded = true;
                 _vpaidAd = null;
-                _model.broadcastEventExternally(ExternalEventName.ON_PLAYBACK_COMPLETE);
+                _model.broadcastEventExternally(VPAIDEvent.AdStopped);
             }
         }
 		
@@ -204,14 +205,14 @@ package com.videojs.vpaid {
             var loader:Loader = new Loader();
             var loaderContext:LoaderContext = new LoaderContext();
             loader.contentLoaderInfo.addEventListener(Event.INIT, function(evt) {
-                    console("****** Ad init: " + evt);
+                    console("****** Load Ad Asset init: " + evt);
                     //successfulCreativeLoad(evt);
                 });
             loader.contentLoaderInfo.addEventListener(ErrorEvent.ERROR, function (evt) {
-                    console("******** Error: " + evt);
+                    console("******** Load Ad Asset Error: " + evt);
                 });
             loader.contentLoaderInfo.addEventListener(Event.COMPLETE, function(evt:Object): void {
-                console("****** Ad Complete: " + evt);
+                console("****** Load Ad Asset Complete: " + evt);
                 successfulCreativeLoad(evt);
             });
             loader.contentLoaderInfo.addEventListener(SecurityErrorEvent.SECURITY_ERROR, 
@@ -269,6 +270,11 @@ package com.videojs.vpaid {
             _vpaidAd.addEventListener(VPAIDEvent.AdStarted, function():void {
 				console("OnAdStarted");
                 onAdStarted();
+            });
+
+            _vpaidAd.addEventListener(VPAIDEvent.AdVideoComplete, function():void {
+                console("OnAdVideoComplete");
+                _model.broadcastEventExternally(VPAIDEvent.AdVideoComplete);
             });
 
 			console("handshake");

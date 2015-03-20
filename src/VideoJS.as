@@ -20,6 +20,8 @@ package{
     import flash.utils.ByteArray;
     import flash.utils.Timer;
     import flash.utils.setTimeout;
+    import flash.media.SoundMixer;
+    import flash.media.SoundTransform;
     
     [SWF(backgroundColor="#000000", frameRate="60", width="480", height="270")]
     public class VideoJS extends Sprite{
@@ -389,6 +391,7 @@ package{
                     break;
                 case "muted":
                     _app.model.muted = _app.model.humanToBoolean(pValue);
+                    SoundMixer.soundTransform = new SoundTransform(0);
                     break;
                 case "volume":
                     _app.model.volume = Number(pValue);
