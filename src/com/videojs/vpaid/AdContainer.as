@@ -11,6 +11,8 @@ package com.videojs.vpaid {
 	import flash.external.ExternalInterface;
     import flash.system.LoaderContext;
     import com.videojs.vpaid.events.VPAIDEvent;
+    import flash.media.SoundMixer;
+    import flash.media.SoundTransform;    
 
     public class AdContainer extends Sprite {
         
@@ -122,6 +124,7 @@ package com.videojs.vpaid {
             _model.broadcastEventExternally(VPAIDEvent.AdStarted);
             _isPlaying = true;
             _isPaused = false;
+            SoundMixer.soundTransform = new SoundTransform(0);
         }
         
         private function onAdError(): void {
