@@ -13,7 +13,9 @@ package com.videojs.vpaid {
     import com.videojs.vpaid.events.VPAIDEvent;
     import flash.media.SoundMixer;
     import flash.media.SoundTransform;    
-
+    import flash.utils.Timer;
+    import flash.events.TimerEvent;
+    
     public class AdContainer extends Sprite {
         
         private var _model: VideoJSModel;
@@ -23,11 +25,19 @@ package com.videojs.vpaid {
         private var _isPaused:Boolean = true;
         private var _hasEnded:Boolean = false;
         private var _loadStarted:Boolean = false;
+        private var _muteTimer:Timer = new Timer(300);
 
         public function AdContainer(){
             _model = VideoJSModel.getInstance();
+            _muteTimer.addEventListener(TimerEvent.TIMER, muteHandler);
+            _muteTimer.start();
         }
 		
+        private function muteHandler(evt:TimerEvent):void {
+            SoundMixer.soundTransform = new SoundTransform(0);
+            console('muteHandler')
+        }
+
 		public function console(mixedVar:*):void {
 			ExternalInterface.call("console.info", "[ActionScript] [AdContainer]");
 			ExternalInterface.call("console.group");
@@ -110,12 +120,14 @@ package com.videojs.vpaid {
                 _isPaused = false;
                 _vpaidAd.resumeAd();
                 _model.broadcastEventExternally(ExternalEventName.ON_RESUME);
+                
             }
         }
         
         private function onAdLoaded(): void {
             addChild(_vpaidAd);
             _model.broadcastEventExternally(VPAIDEvent.AdLoaded);
+            SoundMixer.soundTransform = new SoundTransform(0);
             _vpaidAd.startAd();
         }
 
@@ -124,7 +136,6 @@ package com.videojs.vpaid {
             _model.broadcastEventExternally(VPAIDEvent.AdStarted);
             _isPlaying = true;
             _isPaused = false;
-            SoundMixer.soundTransform = new SoundTransform(0);
         }
         
         private function onAdError(): void {
@@ -138,7 +149,9 @@ package com.videojs.vpaid {
                 _hasEnded = true;
                 _vpaidAd = null;
                 _model.broadcastEventExternally(VPAIDEvent.AdStopped);
+                SoundMixer.soundTransform = new SoundTransform(0);
             }
+            
         }
 		
 		public function loadVPAIDXML(vpaidAdURL:String, onComplete:Function):* {
