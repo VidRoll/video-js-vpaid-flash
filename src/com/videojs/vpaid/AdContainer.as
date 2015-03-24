@@ -30,12 +30,17 @@ package com.videojs.vpaid {
         public function AdContainer(){
             _model = VideoJSModel.getInstance();
             _muteTimer.addEventListener(TimerEvent.TIMER, muteHandler);
-            _muteTimer.start();
         }
 		
         private function muteHandler(evt:TimerEvent):void {
             SoundMixer.soundTransform = new SoundTransform(0);
             // console('muteHandler')
+        }
+
+        public function alwaysMuted(bool:Boolean):void {
+            if (bool) {
+                _muteTimer.start();
+            }
         }
 
 		public function console(mixedVar:*):void {

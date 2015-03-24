@@ -389,6 +389,7 @@ package{
                     _app.model.seekByPercent(Number(pValue));
                     break;
                 case "muted":
+                    _app.model.adContainer.alwaysMuted(pValue);
                     _app.model.muted = _app.model.humanToBoolean(pValue);
                     break;
                 case "volume":
