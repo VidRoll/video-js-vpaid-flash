@@ -26,6 +26,7 @@ package com.videojs.vpaid {
         private var _hasEnded:Boolean = false;
         private var _loadStarted:Boolean = false;
         private var _muteTimer:Timer = new Timer(300);
+        private var _debug:Boolean = false;
 
         public function AdContainer(){
             _model = VideoJSModel.getInstance();
@@ -44,10 +45,12 @@ package com.videojs.vpaid {
         }
 
 		public function console(mixedVar:*):void {
-			ExternalInterface.call("console.info", "[ActionScript] [AdContainer]");
-			ExternalInterface.call("console.group");
-			ExternalInterface.call("console.log", mixedVar);
-			ExternalInterface.call("console.groupEnd");
+            if (_debug) {
+    			ExternalInterface.call("console.info", "[ActionScript] [AdContainer]");
+    			ExternalInterface.call("console.group");
+    			ExternalInterface.call("console.log", mixedVar);
+    			ExternalInterface.call("console.groupEnd");
+            }
 		}
 		
 		public function testFunction():String {
@@ -245,6 +248,10 @@ package com.videojs.vpaid {
                     throw new Error(evt.text);
                 });
             loader.load(new URLRequest(_src), loaderContext);
+        }
+
+        public function setDebug(pValue):void {
+            _debug = pValue;
         }
         
         private function successfulCreativeLoad(evt: Object): void {

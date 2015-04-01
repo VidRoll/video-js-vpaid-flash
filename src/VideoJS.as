@@ -29,6 +29,7 @@ package{
         
         private var _app:VideoJSApp;
         private var _stageSizeTimer:Timer;
+        private var _debug:Boolean = false;
         
         public function VideoJS(){
             _stageSizeTimer = new Timer(250);
@@ -37,10 +38,12 @@ package{
         }
 		
 		public function console(mixedVar:*):void {
-			ExternalInterface.call("console.info", "[ActionScript]");
-			ExternalInterface.call("console.group");
-			ExternalInterface.call("console.log", mixedVar);
-			ExternalInterface.call("console.groupEnd");
+            if (_debug) {
+			     ExternalInterface.call("console.info", "[ActionScript]");
+			     ExternalInterface.call("console.group");
+			     ExternalInterface.call("console.log", mixedVar);
+			     ExternalInterface.call("console.groupEnd");
+            }
 		}
 		
 		public function externalCallback(eventName:String, eventFunction:Function):void {
@@ -230,6 +233,8 @@ package{
             stage.scaleMode = StageScaleMode.NO_SCALE;
             stage.align = StageAlign.TOP_LEFT;
             _stageSizeTimer.start();
+
+            _debug = loaderInfo.parameters.debug
         }
         
         private function onStageSizeTimerTick(e:TimerEvent):void{
@@ -344,6 +349,9 @@ package{
                 case "videoHeight":
                     return _app.model.height;
                     break;
+                case "debug":
+                    return _debug;
+                    break;
             }
             return null;
         }
@@ -406,6 +414,10 @@ package{
                     break;
                 case "height":
                     _app.model.height = Number(pValue);
+                    break;
+                case "debug":
+                    _debug = _app.model.humanToBoolean(pValue);
+                    _app.model.adContainer.setDebug(pValue);
                     break;
                 default:
                     _app.model.broadcastErrorEventExternally(ExternalErrorEventName.PROPERTY_NOT_FOUND, pPropertyName);
