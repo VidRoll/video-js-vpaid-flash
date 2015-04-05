@@ -282,7 +282,7 @@ package com.videojs.vpaid {
 			
             _vpaidAd.addEventListener(VPAIDEvent.AdLog, function(data:*):void {
 				console("OnAdLog");
-				/*console(data);*/
+                if (data) console(data);
             });
             
             _vpaidAd.addEventListener(VPAIDEvent.AdStopped, function():void {
@@ -292,7 +292,12 @@ package com.videojs.vpaid {
             
             _vpaidAd.addEventListener(VPAIDEvent.AdError, function(evt):void {
 				console("OnVPAIDAdError: " + evt.data.message);
+                console(evt);
                 onAdError();
+            });
+
+            _vpaidAd.addEventListener(VPAIDEvent.AdSkipped, function():void {
+                console("OnVPAIDAdSkipped: ");
             });
 
             _vpaidAd.addEventListener(VPAIDEvent.AdStarted, function():void {

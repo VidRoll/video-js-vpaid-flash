@@ -79,6 +79,8 @@ package{
 						}
 						else {
 							console("NO PROPER SWF FOUND!");
+                            console(_app.model.adContainer.getSrc());
+
 						}
 					}
 				);
