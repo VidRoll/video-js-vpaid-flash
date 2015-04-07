@@ -131,12 +131,15 @@ package com.videojs.vpaid {
                 
             }
         }
+
+        public function startAd(): void {
+            _vpaidAd.startAd();
+        }
         
         private function onAdLoaded(): void {
             addChild(_vpaidAd);
             _model.broadcastEventExternally(VPAIDEvent.AdLoaded);
             SoundMixer.soundTransform = new SoundTransform(0);
-            _vpaidAd.startAd();
         }
 
         private function onAdStarted(): void {
@@ -170,10 +173,11 @@ package com.videojs.vpaid {
 			var request:URLRequest = new URLRequest(vpaidAdURL);
 			request.method = URLRequestMethod.GET;
 		
+        /*
 			var variables:URLVariables = new URLVariables();
 			variables.name = "TouchVision";
 			request.data = variables;
-		
+		*/
 			var loader:URLLoader = new URLLoader();
 			loader.addEventListener(Event.COMPLETE, onComplete);
 			loader.dataFormat = URLLoaderDataFormat.TEXT;

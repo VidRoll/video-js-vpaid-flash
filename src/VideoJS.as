@@ -118,6 +118,11 @@ package{
 				console(e);
 			}
 		}
+
+        public function mbp_startAd():void {
+            console("VPAIDSWF: startAd");
+            _app.model.adContainer.startAd();
+        }
         
         private function init():void{
 			
@@ -151,6 +156,7 @@ package{
 			// VPAID
 			externalCallback("mbp_initVPAID", mbp_initVPAID);
 			externalCallback("mbp_initVPAIDSWF", mbp_initVPAIDSWF);
+            externalCallback("mbp_startAd", mbp_startAd);
         }
         
         private function registerExternalMethods():void{
