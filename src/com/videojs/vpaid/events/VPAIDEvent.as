@@ -40,5 +40,6 @@ package com.videojs.vpaid.events {
         public static const AdPlaying : String = "AdPlaying";
         public static const AdLog : String = "AdLog";
         public static const AdError : String = "AdError";
+        public static const AdVastCall: String = "AdVastCall";
     }
 }

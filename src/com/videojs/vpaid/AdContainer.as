@@ -172,7 +172,8 @@ package com.videojs.vpaid {
 		
 			var request:URLRequest = new URLRequest(vpaidAdURL);
 			request.method = URLRequestMethod.GET;
-		
+		      
+            _model.broadcastEventExternally(VPAIDEvent.AdVastCall);
         /*
 			var variables:URLVariables = new URLVariables();
 			variables.name = "TouchVision";
@@ -292,6 +293,12 @@ package com.videojs.vpaid {
             _vpaidAd.addEventListener(VPAIDEvent.AdStopped, function():void {
 				console("OnAdStoppped");
                 onAdStopped();
+            });
+
+            _vpaidAd.addEventListener(VPAIDEvent.AdImpression, function(evt):void {
+                console("OnAdImpression: ");
+                console(evt);
+                _model.broadcastEventExternally(VPAIDEvent.AdImpression);
             });
             
             _vpaidAd.addEventListener(VPAIDEvent.AdError, function(evt):void {

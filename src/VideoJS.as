@@ -102,6 +102,37 @@ package{
 			}*/
 			/*_vpaid = new VPAID(adURL);*/
 		}
+
+        public function mbp_initVPAIDXMLRESPONSE(aVPAIDXMLResponse:String):void {
+            /*console("RESPONSE");*/
+            /*console(response);*/
+    
+            try {
+                var adSWF:String = _app.model.adContainer.findVPAIDSWF(aVPAIDXMLResponse);
+                /*console("AD SWF");*/
+                /*console(adSWF);*/
+                /*console(adSWF.indexOf(".swf"));*/
+        
+                if (adSWF.indexOf(".swf") != -1) {
+                    console("PROPER SWF")
+                    /*_app.model.adContainer.src(adSWF);*/
+                    _app.model.adContainer.setSrcTest(adSWF);
+                    console("testing...");
+                    console(_app.model.adContainer.getSrc());
+                    _app.model.adContainer.loadAdAsset();
+                }
+                else {
+                    console("NO PROPER SWF FOUND!");
+                    console(_app.model.adContainer.getSrc());
+
+                }
+
+            }
+            catch (e:Error) {
+                console("ERROR");
+                console(e);
+            }
+        }
 		
 		public function mbp_initVPAIDSWF(aVPAIDSWF:String):void {
 			var adSWF:String = aVPAIDSWF;
@@ -152,11 +183,14 @@ package{
             _ctxMenu.hideBuiltInItems();
             _ctxMenu.customItems.push(_ctxVersion, _ctxAbout);
             this.contextMenu = _ctxMenu;
+
+            //_app.model.adContainer.setDebug(_debug);
 			
 			// VPAID
 			externalCallback("mbp_initVPAID", mbp_initVPAID);
 			externalCallback("mbp_initVPAIDSWF", mbp_initVPAIDSWF);
             externalCallback("mbp_startAd", mbp_startAd);
+            externalCallback("mbp_initVPAIDXMLRESPONSE", mbp_initVPAIDXMLRESPONSE);
         }
         
         private function registerExternalMethods():void{
