@@ -164,33 +164,13 @@ package com.videojs.vpaid {
             }
             
         }
-		
-		public function loadVPAIDXML(vpaidAdURL:String, onComplete:Function):* {
-			
-			console("requesting vpaid...");
-			console("url::" + vpaidAdURL);
-		
-			var request:URLRequest = new URLRequest(vpaidAdURL);
-			request.method = URLRequestMethod.GET;
-		      
-            _model.broadcastEventExternally(VPAIDEvent.AdVastCall);
-        /*
-			var variables:URLVariables = new URLVariables();
-			variables.name = "TouchVision";
-			request.data = variables;
-		*/
-			var loader:URLLoader = new URLLoader();
-			loader.addEventListener(Event.COMPLETE, onComplete);
-			loader.dataFormat = URLLoaderDataFormat.TEXT;
-			loader.load(request);
-		}
-		
+				
 		public function findVPAIDSWF(xmlSrc:String):String {
 			
 			// create new XML from xmlSrc
 			/*var vpaidXML = new XML(event.target.data);*/
 			var vpaidXML = new XML(xmlSrc);
-		
+		  
 			console("ad title test::" + vpaidXML.Ad.InLine.AdTitle.toString());
 			console("ad vpaid version test::" + vpaidXML.attribute("version").toXMLString());
 		
