@@ -25,7 +25,10 @@ package com.videojs.vpaid {
         private var _isPaused:Boolean = true;
         private var _hasEnded:Boolean = false;
         private var _loadStarted:Boolean = false;
-        private var _muteTimer:Timer = new Timer(1000);
+
+        private var _muteTimer:Timer = new Timer(300);
+        private var _debug:Boolean = false;
+
 
         public function AdContainer(){
             _model = VideoJSModel.getInstance();
@@ -45,10 +48,12 @@ package com.videojs.vpaid {
         }
 
 		public function console(mixedVar:*):void {
-			ExternalInterface.call("console.info", "[ActionScript] [AdContainer]");
-			ExternalInterface.call("console.group");
-			ExternalInterface.call("console.log", mixedVar);
-			ExternalInterface.call("console.groupEnd");
+            if (_debug) {
+    			ExternalInterface.call("console.info", "[ActionScript] [AdContainer]");
+    			ExternalInterface.call("console.group");
+    			ExternalInterface.call("console.log", mixedVar);
+    			ExternalInterface.call("console.groupEnd");
+            }
 		}
 		
 		public function testFunction():String {
@@ -129,12 +134,15 @@ package com.videojs.vpaid {
                 
             }
         }
+
+        public function startAd(): void {
+            _vpaidAd.startAd();
+        }
         
         private function onAdLoaded(): void {
             addChild(_vpaidAd);
             _model.broadcastEventExternally(VPAIDEvent.AdLoaded);
             SoundMixer.soundTransform = new SoundTransform(0);
-            _vpaidAd.startAd();
         }
 
         private function onAdStarted(): void {
@@ -159,31 +167,13 @@ package com.videojs.vpaid {
             }
             
         }
-		
-		public function loadVPAIDXML(vpaidAdURL:String, onComplete:Function):* {
-			
-			console("requesting vpaid...");
-			console("url::" + vpaidAdURL);
-		
-			var request:URLRequest = new URLRequest(vpaidAdURL);
-			request.method = URLRequestMethod.GET;
-		
-			var variables:URLVariables = new URLVariables();
-			variables.name = "TouchVision";
-			request.data = variables;
-		
-			var loader:URLLoader = new URLLoader();
-			loader.addEventListener(Event.COMPLETE, onComplete);
-			loader.dataFormat = URLLoaderDataFormat.TEXT;
-			loader.load(request);
-		}
-		
+				
 		public function findVPAIDSWF(xmlSrc:String):String {
 			
 			// create new XML from xmlSrc
 			/*var vpaidXML = new XML(event.target.data);*/
 			var vpaidXML = new XML(xmlSrc);
-		
+		  
 			console("ad title test::" + vpaidXML.Ad.InLine.AdTitle.toString());
 			console("ad vpaid version test::" + vpaidXML.attribute("version").toXMLString());
 		
@@ -247,6 +237,10 @@ package com.videojs.vpaid {
                 });
             loader.load(new URLRequest(_src), loaderContext);
         }
+
+        public function setDebug(pValue):void {
+            _debug = pValue;
+        }
         
         private function successfulCreativeLoad(evt: Object): void {
 
@@ -276,17 +270,28 @@ package com.videojs.vpaid {
 			
             _vpaidAd.addEventListener(VPAIDEvent.AdLog, function(data:*):void {
 				console("OnAdLog");
-				/*console(data);*/
+                if (data) console(data);
             });
             
             _vpaidAd.addEventListener(VPAIDEvent.AdStopped, function():void {
 				console("OnAdStoppped");
                 onAdStopped();
             });
+
+            _vpaidAd.addEventListener(VPAIDEvent.AdImpression, function(evt):void {
+                console("OnAdImpression: ");
+                console(evt);
+                _model.broadcastEventExternally(VPAIDEvent.AdImpression);
+            });
             
             _vpaidAd.addEventListener(VPAIDEvent.AdError, function(evt):void {
 				console("OnVPAIDAdError: " + evt.data.message);
+                console(evt);
                 onAdError();
+            });
+
+            _vpaidAd.addEventListener(VPAIDEvent.AdSkipped, function():void {
+                console("OnVPAIDAdSkipped: ");
             });
 
             _vpaidAd.addEventListener(VPAIDEvent.AdStarted, function():void {
