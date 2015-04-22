@@ -25,7 +25,7 @@ package com.videojs.vpaid {
         private var _isPaused:Boolean = true;
         private var _hasEnded:Boolean = false;
         private var _loadStarted:Boolean = false;
-        private var _muteTimer:Timer = new Timer(300);
+        private var _muteTimer:Timer = new Timer(1000);
 
         public function AdContainer(){
             _model = VideoJSModel.getInstance();
@@ -34,7 +34,8 @@ package com.videojs.vpaid {
 		
         private function muteHandler(evt:TimerEvent):void {
             SoundMixer.soundTransform = new SoundTransform(0);
-            // console('muteHandler')
+            SoundMixer.stopAll();
+            console('muteHandler')
         }
 
         public function alwaysMuted(bool:Boolean):void {
