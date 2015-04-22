@@ -38,7 +38,7 @@ package com.videojs.vpaid {
         private function muteHandler(evt:TimerEvent):void {
             SoundMixer.soundTransform = new SoundTransform(0);
             SoundMixer.stopAll();
-            console('muteHandler')
+            console('muteHandler');
         }
 
         public function alwaysMuted(bool:Boolean):void {
@@ -49,10 +49,10 @@ package com.videojs.vpaid {
 
 		public function console(mixedVar:*):void {
             if (_debug) {
-    			ExternalInterface.call("console.info", "[ActionScript] [AdContainer]");
-    			ExternalInterface.call("console.group");
-    			ExternalInterface.call("console.log", mixedVar);
-    			ExternalInterface.call("console.groupEnd");
+    			//ExternalInterface.call("console.info", "[ActionScript] [AdContainer]: ");
+    			//ExternalInterface.call("console.group");
+    			ExternalInterface.call("console.log", "[ActionScript] [AdContainer]: " + mixedVar);
+    			//ExternalInterface.call("console.groupEnd");
             }
 		}
 		
