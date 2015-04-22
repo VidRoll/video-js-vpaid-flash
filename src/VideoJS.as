@@ -117,7 +117,7 @@ package{
             _ctxMenu.customItems.push(_ctxVersion, _ctxAbout);
             this.contextMenu = _ctxMenu;
 
-            //_app.model.adContainer.setDebug(_debug);
+            _app.model.adContainer.setDebug(_debug);
 			
 			// VPAID
             externalCallback("mbp_startAd", mbp_startAd);
