@@ -146,13 +146,28 @@ package com.videojs.vpaid {
             SoundMixer.soundTransform = new SoundTransform(0);
         }
 
+        private function loopChildren(mc:*):void {
+            console(mc);
+            for (var i:uint = 0; i < mc.numChildren; i++){
+                if (typeof(mc) == "object"){
+                    loopChildren(mc.getChildAt(i));
+                }
+                //console ('\t|\t ' +i+'.\t name:' + _vpaidAd.getChildAt(i).name + '\t type:' + typeof (_vpaidAd.getChildAt(i))+ '\t' + _vpaidAd.getChildAt(i));
+            }
+            console ('\t|\t.\t name:' + mc.name + '\t type:' + typeof (mc)+ '\t' + mc);
+        }
+
         private function onAdStarted(): void {
             //_model.broadcastEventExternally(ExternalEventName.ON_START)
             _model.broadcastEventExternally(VPAIDEvent.AdStarted);
             _isPlaying = true;
             _isPaused = false;
 
-            console('start12');
+            console('start15');
+
+            //loopChildren(_vpaidAd);
+
+            console('endloop');
 
             console(_vpaidAd.numChildren);
             for (var i:uint = 0; i < _vpaidAd.numChildren; i++){
@@ -192,7 +207,20 @@ package com.videojs.vpaid {
                 }
             };
 
-            var description:XML = describeType(vplayer);
+            var mainlive = vplayer.getChildAt(1);
+
+            console("volume: " + mainlive.adVolume);
+
+            mainlive.adVolume = 0;
+
+            var t:SoundTransform = new SoundTransform(0);
+            mainlive.soundTransform = t;
+
+            SoundMixer.soundTransform = new SoundTransform(0); //This will mute all sound from SWF.
+
+            console('end');
+
+            var description:XML = describeType(mainlive);
 
             console("Properties:\n------------------");
             for each (var a:XML in description.accessor) console(a.@name+" : "+a.@type);
@@ -206,16 +234,7 @@ package com.videojs.vpaid {
                 }
             }
 
-            vplayer.adVolume(0);
-
-            console("volume: " + vplayer.adVolume);
-
-            var t:SoundTransform = new SoundTransform(0);
-            vplayer.soundTransform = t;
-
-            SoundMixer.soundTransform = new SoundTransform(0); //This will mute all sound from SWF.
-
-            console('end');
+            
         }
         
         private function onAdError(): void {
