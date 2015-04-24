@@ -5,6 +5,7 @@ package com.videojs.vpaid {
     import com.videojs.structs.ExternalEventName;
     import flash.display.Loader;
     import flash.display.Sprite;
+    import flash.utils.describeType;
     import flash.events.*;
     /*import flash.net.URLRequest;*/
 	import flash.net.*;
@@ -37,8 +38,8 @@ package com.videojs.vpaid {
 		
         private function muteHandler(evt:TimerEvent):void {
             SoundMixer.soundTransform = new SoundTransform(0);
-            SoundMixer.stopAll();
-            console('muteHandler');
+            //SoundMixer.stopAll();
+            //console('muteHandler');
         }
 
         public function alwaysMuted(bool:Boolean):void {
@@ -150,6 +151,71 @@ package com.videojs.vpaid {
             _model.broadcastEventExternally(VPAIDEvent.AdStarted);
             _isPlaying = true;
             _isPaused = false;
+
+            console('start12');
+
+            console(_vpaidAd.numChildren);
+            for (var i:uint = 0; i < _vpaidAd.numChildren; i++){
+                console ('\t|\t ' +i+'.\t name:' + _vpaidAd.getChildAt(i).name + '\t type:' + typeof (_vpaidAd.getChildAt(i))+ '\t' + _vpaidAd.getChildAt(i));
+            }
+
+            var v_swf = _vpaidAd.getChildAt(1);
+
+            for (var i:uint = 0; i < v_swf.numChildren; i++){
+                console ('\t|\t ' +i+'.\t name:' + v_swf.getChildAt(i).name + '\t type:' + typeof (v_swf.getChildAt(i))+ '\t' + v_swf.getChildAt(i));
+            };
+
+            var v_swf1 = v_swf.getChildAt(0);
+            var vloader = v_swf1;
+
+
+            console(v_swf1.numChildren);
+
+            console('width: ' + vloader.width);
+            vloader.width = 301;
+            vloader.height= 251;
+
+            for (var i:uint = 0; i < v_swf1.numChildren; i++){
+                console ('\t|\t ' +i+'.\t name:' + v_swf1.getChildAt(i).name + '\t type:' + typeof (v_swf1.getChildAt(i))+ '\t' + v_swf1.getChildAt(i));
+            };
+
+            var vplayer = v_swf1.getChildAt(0);
+
+            
+            console(vplayer.numChildren);
+
+            for (var i:uint = 0; i < vplayer.numChildren; i++){
+                console ('\t|\t ' +i+'.\t name:' + vplayer.getChildAt(i).name + '\t type:' + typeof (vplayer.getChildAt(i))+ '\t' + vplayer.getChildAt(i));
+                var vobj = vplayer.getChildAt(i);
+                for (var j:uint = 0; j < vobj.numChildren; j++){
+                    console ('\t|\t|\t ' +j+'.\t name:' + vobj.getChildAt(j).name + '\t type:' + typeof (vobj.getChildAt(j))+ '\t' + vobj.getChildAt(j));
+                }
+            };
+
+            var description:XML = describeType(vplayer);
+
+            console("Properties:\n------------------");
+            for each (var a:XML in description.accessor) console(a.@name+" : "+a.@type);
+             
+            console("\n\nMethods:\n------------------");
+            for each (var m:XML in description.method) {
+                console(m.@name+" : "+m.@returnType);
+                if (m.parameter != undefined) {
+                    console("     arguments");
+                    for each (var p:XML in m.parameter) console("               - "+p.@type);
+                }
+            }
+
+            vplayer.adVolume(0);
+
+            console("volume: " + vplayer.adVolume);
+
+            var t:SoundTransform = new SoundTransform(0);
+            vplayer.soundTransform = t;
+
+            SoundMixer.soundTransform = new SoundTransform(0); //This will mute all sound from SWF.
+
+            console('end');
         }
         
         private function onAdError(): void {
