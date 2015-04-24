@@ -6,6 +6,7 @@ package com.videojs.vpaid {
     import flash.display.Loader;
     import flash.display.Sprite;
     import flash.utils.describeType;
+    import flash.utils.getQualifiedClassName
     import flash.events.*;
     /*import flash.net.URLRequest;*/
 	import flash.net.*;
@@ -149,30 +150,32 @@ package com.videojs.vpaid {
         private function loopChildren(mc:*):void {
             
             if (mc.hasOwnProperty("numChildren")) {
-                console(mc);
-                if (mc.hasOwnProperty("adVolume")) {
-                    console("has adVolume");
-                    mc.adVolume = 0;
-                }
-                console(mc.numChildren);
                 for (var i:uint = 0; i < mc.numChildren; i++){
-                    console(i);
-                    if (typeof(mc.getChildAt(i)) == "object"){
+                    if (mc.getChildAt(i)) {
+                        try {
+                         muteAdVolume(mc);
+                        } catch(e:Error){
+                            console(e.message);
+                        }
                         loopChildren(mc.getChildAt(i));
-                    }
-                    //console ('\t|\t.\t name:' + mc.name + '\t type:' + typeof (mc)+ '\t' + mc);
-                    //console ('\t|\t ' +i+'.\t name:' + _vpaidAd.getChildAt(i).name + '\t type:' + typeof (_vpaidAd.getChildAt(i))+ '\t' + _vpaidAd.getChildAt(i));
+                    }                    
                 }
-                //console ('\t|\t.\t name:' + mc.name + '\t type:' + typeof (mc)+ '\t' + mc);
             }
         }
 
         private function muteAdVolume(mc:*):void {
             if (mc.hasOwnProperty("adVolume")) {
-                console(mc);
-                console("previous volume: " + mc.adVolume);
+                //console(mc);
+                //console("previous volume: " + mc.adVolume);
                 mc.adVolume = 0;
-                console("new volume: " + mc.adVolume);
+                //console("new volume: " + mc.adVolume);
+
+                //console("class: " + getQualifiedClassName(mc));
+                var mc_className = getQualifiedClassName(mc);
+                if (mc_className.indexOf("Player")) {
+                    //mc.width = 301;
+                    //mc.height = 251;
+                }
             }
         }
 
@@ -182,66 +185,8 @@ package com.videojs.vpaid {
             _isPlaying = true;
             _isPaused = false;
 
-           //loopChildren(_vpaidAd);
+           loopChildren(_vpaidAd);
 
-            console("vpaidAd Childs: " + _vpaidAd.numChildren);
-            if (_vpaidAd.numChildren> 1) {
-                for (var i:uint = 0; i < _vpaidAd.numChildren; i++){
-                    console ('\t|\t ' +i+'.\t\t type:' + typeof (_vpaidAd.getChildAt(i))+ '\t' + _vpaidAd.getChildAt(i));
-                }
-
-                var v_swf = _vpaidAd.getChildAt(1);
-
-                for (var i:uint = 0; i < v_swf.numChildren; i++){
-                    console ('\t|\t ' +i+'.\t \t type:' + typeof (v_swf.getChildAt(i))+ '\t' + v_swf.getChildAt(i));
-                };
-
-                var vloader = v_swf.getChildAt(0);
-
-                console(vloader.numChildren);
-
-                vloader.width = 301;
-                vloader.height= 251;
-
-                for (var i:uint = 0; i < vloader.numChildren; i++){
-                    console ('\t|\t ' +i+'\t type:' + typeof (vloader.getChildAt(i))+ '\t' + vloader.getChildAt(i));
-                };
-
-                var vplayer = vloader.getChildAt(0);
-
-                
-                console(vplayer.numChildren);
-
-                for (var i:uint = 0; i < vplayer.numChildren; i++){
-                    console ('\t|\t ' +i+'.\t type:' + typeof (vplayer.getChildAt(i))+ '\t' + vplayer.getChildAt(i));
-                    /*var vobj = vplayer.getChildAt(i);
-                    for (var j:uint = 0; j < vobj.numChildren; j++){
-                        console ('\t|\t|\t ' +j+'\t type:' + typeof (vobj.getChildAt(j))+ '\t' + vobj.getChildAt(j));
-                    }*/
-                };
-
-                muteAdVolume(vplayer);
-
-                if (vplayer.numChildren > 1) {
-                   var mainLive = vplayer.getChildAt(1);
-                   muteAdVolume(mainLive);
-                    /*
-                   var description:XML = describeType(mainLive);
-
-                    console("Properties:\n------------------");
-                    for each (var a:XML in description.accessor) console(a.@name+" : "+a.@type);
-                     
-                    console("\n\nMethods:\n------------------");
-                    for each (var m:XML in description.method) {
-                        console(m.@name+" : "+m.@returnType);
-                        if (m.parameter != undefined) {
-                            console("     arguments");
-                            for each (var p:XML in m.parameter) console("               - "+p.@type);
-                        }
-                    }
-                    */
-                }
-            }
             console('end');
         }
         
