@@ -143,7 +143,7 @@ package com.videojs.vpaid {
         
         private function onAdLoaded(): void {
             addChild(_vpaidAd);
-            _model.broadcastEventExternally(VPAIDEvent.AdLoaded);
+            _model.broadcastEventExternally(VPAIDEvent.AdLoaded, _src);
             SoundMixer.soundTransform = new SoundTransform(0);
         }
 
@@ -190,8 +190,8 @@ package com.videojs.vpaid {
             console('end');
         }
         
-        private function onAdError(): void {
-            _model.broadcastErrorEventExternally(VPAIDEvent.AdError);
+        private function onAdError(msg): void {
+            _model.broadcastErrorEventExternally(VPAIDEvent.AdError,msg);
             _vpaidAd.stopAd();
         }
         
@@ -325,7 +325,7 @@ package com.videojs.vpaid {
             _vpaidAd.addEventListener(VPAIDEvent.AdError, function(evt):void {
 				console("OnVPAIDAdError: " + evt.data.message);
                 console(evt);
-                onAdError();
+                onAdError(evt.data.message);
             });
 
             _vpaidAd.addEventListener(VPAIDEvent.AdSkipped, function():void {
@@ -335,6 +335,26 @@ package com.videojs.vpaid {
             _vpaidAd.addEventListener(VPAIDEvent.AdStarted, function():void {
 				console("OnAdStarted");
                 onAdStarted();
+            });
+
+            _vpaidAd.addEventListener(VPAIDEvent.AdVideoFirstQuartile, function():void {
+                console("OnAdVideoFirstQuartile");
+                _model.broadcastEventExternally(VPAIDEvent.AdVideoFirstQuartile);
+            });
+
+            _vpaidAd.addEventListener(VPAIDEvent.AdVideoMidpoint, function():void {
+                console("OnAdVideoMidpoint");
+                _model.broadcastEventExternally(VPAIDEvent.AdVideoMidpoint);
+            });
+
+            _vpaidAd.addEventListener(VPAIDEvent.AdVideoThirdQuartile, function():void {
+                console("OnAdVideoThirdQuartile");
+                _model.broadcastEventExternally(VPAIDEvent.AdVideoThirdQuartile);
+            });
+
+            _vpaidAd.addEventListener(VPAIDEvent.AdClickThru, function():void {
+                console("OnAdAdClickThru");
+                _model.broadcastEventExternally(VPAIDEvent.AdClickThru);
             });
 
             _vpaidAd.addEventListener(VPAIDEvent.AdVideoComplete, function():void {
