@@ -5,6 +5,8 @@ package com.videojs.vpaid {
     import com.videojs.structs.ExternalEventName;
     import flash.display.Loader;
     import flash.display.Sprite;
+    import flash.utils.describeType;
+    import flash.utils.getQualifiedClassName
     import flash.events.*;
     /*import flash.net.URLRequest;*/
 	import flash.net.*;
@@ -37,8 +39,8 @@ package com.videojs.vpaid {
 		
         private function muteHandler(evt:TimerEvent):void {
             SoundMixer.soundTransform = new SoundTransform(0);
-            SoundMixer.stopAll();
-            console('muteHandler');
+            //SoundMixer.stopAll();
+            //console('muteHandler');
         }
 
         public function alwaysMuted(bool:Boolean):void {
@@ -145,11 +147,47 @@ package com.videojs.vpaid {
             SoundMixer.soundTransform = new SoundTransform(0);
         }
 
+        private function loopChildren(mc:*):void {
+            
+            if (mc.hasOwnProperty("numChildren")) {
+                for (var i:uint = 0; i < mc.numChildren; i++){
+                    if (mc.getChildAt(i)) {
+                        try {
+                         muteAdVolume(mc);
+                        } catch(e:Error){
+                            console(e.message);
+                        }
+                        loopChildren(mc.getChildAt(i));
+                    }                    
+                }
+            }
+        }
+
+        private function muteAdVolume(mc:*):void {
+            if (mc.hasOwnProperty("adVolume")) {
+                //console(mc);
+                //console("previous volume: " + mc.adVolume);
+                mc.adVolume = 0;
+                //console("new volume: " + mc.adVolume);
+
+                //console("class: " + getQualifiedClassName(mc));
+                var mc_className = getQualifiedClassName(mc);
+                if (mc_className.indexOf("Player")) {
+                    //mc.width = 301;
+                    //mc.height = 251;
+                }
+            }
+        }
+
         private function onAdStarted(): void {
             //_model.broadcastEventExternally(ExternalEventName.ON_START)
             _model.broadcastEventExternally(VPAIDEvent.AdStarted);
             _isPlaying = true;
             _isPaused = false;
+
+           loopChildren(_vpaidAd);
+
+            console('end');
         }
         
         private function onAdError(): void {
