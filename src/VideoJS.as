@@ -87,6 +87,10 @@ package{
             console("VPAIDSWF: startAd");
             _app.model.adContainer.startAd();
         }
+
+        public function mbp_getVersion():String {
+            return VERSION;
+        }
         
         private function init():void{
 			
@@ -120,6 +124,7 @@ package{
             _app.model.adContainer.setDebug(_debug);
 			
 			// VPAID
+            externalCallback("mbp_getVersion", mbp_getVersion);
             externalCallback("mbp_startAd", mbp_startAd);
             externalCallback("mbp_initVASTRESPONSE", mbp_initVASTRESPONSE);
         }
