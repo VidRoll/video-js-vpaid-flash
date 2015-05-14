@@ -152,10 +152,12 @@ package com.videojs.vpaid {
             if (mc.hasOwnProperty("numChildren")) {
                 for (var i:uint = 0; i < mc.numChildren; i++){
                     if (mc.getChildAt(i)) {
-                        try {
-                         muteAdVolume(mc);
-                        } catch(e:Error){
-                            console(e.message);
+                        if (_model.muted) {
+                            try {
+                             muteAdVolume(mc);
+                            } catch(e:Error){
+                                console(e.message);
+                            }
                         }
                         loopChildren(mc.getChildAt(i));
                     }                    
@@ -166,16 +168,16 @@ package com.videojs.vpaid {
         private function muteAdVolume(mc:*):void {
             if (mc.hasOwnProperty("adVolume")) {
                 //console(mc);
-                //console("previous volume: " + mc.adVolume);
                 mc.adVolume = 0;
-                //console("new volume: " + mc.adVolume);
 
                 //console("class: " + getQualifiedClassName(mc));
+                /*
                 var mc_className = getQualifiedClassName(mc);
                 if (mc_className.indexOf("Player")) {
                     //mc.width = 301;
                     //mc.height = 251;
                 }
+                */
             }
         }
 
@@ -185,9 +187,7 @@ package com.videojs.vpaid {
             _isPlaying = true;
             _isPaused = false;
 
-           loopChildren(_vpaidAd);
-
-            console('end');
+            loopChildren(_vpaidAd);
         }
         
         private function onAdError(msg): void {
