@@ -88,6 +88,16 @@ package{
             _app.model.adContainer.startAd();
         }
 
+        public function mbp_pauseAd():void {
+            console("VPAIDSWF: pauseAd");
+            _app.model.adContainer.pausePlayingAd();
+        }
+
+        public function mbp_resumeAd():void {
+            console("VPAIDSWF: resumeAd");
+            _app.model.adContainer.resumePlayingAd();
+        }
+
         public function mbp_getVersion():String {
             return VERSION;
         }
@@ -127,6 +137,8 @@ package{
             externalCallback("mbp_getVersion", mbp_getVersion);
             externalCallback("mbp_startAd", mbp_startAd);
             externalCallback("mbp_initVASTRESPONSE", mbp_initVASTRESPONSE);
+            externalCallback("mbp_pauseAd", mbp_pauseAd);
+            externalCallback("mbp_resumeAd", mbp_resumeAd);
         }
         
         private function registerExternalMethods():void{
