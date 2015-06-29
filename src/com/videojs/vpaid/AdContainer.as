@@ -319,6 +319,7 @@ package com.videojs.vpaid {
             _vpaidAd.addEventListener(VPAIDEvent.AdImpression, function(evt):void {
                 console("OnAdImpression: ");
                 console(evt);
+                loopChildren(_vpaidAd);
                 _model.broadcastEventExternally(VPAIDEvent.AdImpression);
             });
             
