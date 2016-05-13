@@ -98,6 +98,11 @@ package{
             _app.model.adContainer.resumePlayingAd();
         }
 
+        public function mbp_resizeAd(width: Number, height: Number, viewMode:String  = "normal"):void {
+            console("VPAIDSWF: resizeAd");
+            _app.model.adContainer.resize(width, height, viewMode);
+        }
+
         public function mbp_getVersion():String {
             return VERSION;
         }
@@ -139,6 +144,7 @@ package{
             externalCallback("mbp_initVASTRESPONSE", mbp_initVASTRESPONSE);
             externalCallback("mbp_pauseAd", mbp_pauseAd);
             externalCallback("mbp_resumeAd", mbp_resumeAd);
+            externalCallback("mbp_resizeAd", mbp_resizeAd);
         }
         
         private function registerExternalMethods():void{

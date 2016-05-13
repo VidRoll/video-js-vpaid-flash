@@ -369,6 +369,7 @@ package com.videojs.vpaid {
 			console("initAd");
             // Use stage rect because current ad implementations do not currently provide width/height.
             _vpaidAd.initAd(_model.stageRect.width, _model.stageRect.height, "normal", _model.bitrate, _model.adParameters, _model.environmentVars);
+            //_vpaidAd.initAd(301, 251, "normal", _model.bitrate, _model.adParameters, _model.environmentVars);
         }
     }
 }
